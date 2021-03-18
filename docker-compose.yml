@@ -10,8 +10,6 @@ services:
     volumes:
     - .:/www/src/node_modules
     - .:/www/src/app
-    networks:
-      - api_mongo
   mongo_db:
     image: mongo
     container_name: mongo_db
@@ -19,10 +17,5 @@ services:
       - 27017:27017
     volumes:
       - mongo_data:/data/db
-    networks:
-      - api_mongo
-networks:
-  api_mongo:
-    driver: bridge
 volumes:
   mongo_data:

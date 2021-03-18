@@ -10,6 +10,11 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
-    "incremental": true
+    "incremental": true,
+    "paths": {
+      "@users/*": ["src/users/*"],
+      "@auth/*": ["src/auth/*"],
+      "@refresh-token/*": ["src/refresh-token/*"]
+    }
   }
 }

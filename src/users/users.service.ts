@@ -1,23 +1,45 @@
-
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-
+import { isCryptCompare } from '@users/utils';
+import { ICreateUser, ILoginUser, UserData } from '@users/types/users.type';
 import { User, UserDocument } from './schemas/users.schema';
-import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
-  ) {}
+  constructor(@InjectModel(User.name) private readonly userModel: Model<UserDocument>) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    const createdCat = new this.userModel(createUserDto);
-    return createdCat.save();
+  async create(createUser: ICreateUser): Promise<UserData> {
+    const newUser = new this.userModel(createUser);
+
+    return newUser.save();
   }
 
-  async findAll(): Promise<User[]> {
-    return this.userModel.find().exec();
+  async findByEmail({ email, password }: ILoginUser): Promise<UserData> {
+    const user = await this.userModel.findOne({ email }).select('+password');
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+    }
+
+    const isPasswordCompared = await isCryptCompare(password, user.password);
+
+    if (!isPasswordCompared) {
+      throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+    }
+
+    return user.populate('user', '-password');
+  }
+
+  async findUserById(id: string): Promise<UserData> {
+    return this.userModel.findById(id).select('-_id');
+  }
+
+  async findMyProfile(id: string): Promise<UserData> {
+    return this.userModel.findById(id);
+  }
+
+  async isEmailExist(email: string): Promise<boolean> {
+    return await this.userModel.exists({ email });
   }
 }
