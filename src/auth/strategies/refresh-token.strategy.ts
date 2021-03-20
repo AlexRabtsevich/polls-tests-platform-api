@@ -22,9 +22,9 @@ export class RefreshTokenStrategy extends PassportStrategy(Strategy, JwtStrategy
   async validate(payload: RefreshTokenPayload) {
     const { userId, exp } = payload;
 
-    const isValidRefresh = await this.refreshTokenService.isValidRefreshToken(userId, exp);
+    const isValidRefreshToken = await this.refreshTokenService.isValidRefreshToken(userId, exp);
 
-    if (!isValidRefresh) {
+    if (!isValidRefreshToken) {
       throw new HttpException('Refresh token is not valid', HttpStatus.UNAUTHORIZED);
     }
 
