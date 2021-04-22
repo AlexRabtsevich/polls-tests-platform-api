@@ -14,7 +14,9 @@
     "paths": {
       "@users/*": ["src/users/*"],
       "@auth/*": ["src/auth/*"],
-      "@refresh-token/*": ["src/refresh-token/*"]
+      "@refresh-token/*": ["src/refresh-token/*"],
+      "@answers/*": ["src/answers/*"],
+      "@polls/*": ["src/polls/*"]
     }
   }
 }

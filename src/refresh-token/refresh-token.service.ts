@@ -46,4 +46,8 @@ export class RefreshTokenService {
 
     return true;
   }
+
+  async removeRefreshToken(userId: string): Promise<void> {
+    this.refreshTokenModel.findOneAndDelete({ userId });
+  }
 }

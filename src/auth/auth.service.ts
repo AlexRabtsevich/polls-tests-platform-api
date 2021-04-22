@@ -31,4 +31,8 @@ export class AuthService {
   async refresh(userId: string) {
     return await this.createAccessAndRefreshToken(userId);
   }
+
+  async logout(userId: string) {
+    return await this.refreshTokenService.removeRefreshToken(userId);
+  }
 }

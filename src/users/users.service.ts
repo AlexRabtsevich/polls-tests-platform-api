@@ -1,9 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { isCryptCompare } from '@users/utils';
 import { ICreateUser, ILoginUser, UserData } from '@users/types/users.type';
 import { User, UserDocument } from './schemas/users.schema';
+import { BadRequestException } from '../http-exceptions/bad-request-exception';
 
 @Injectable()
 export class UsersService {
@@ -19,13 +20,13 @@ export class UsersService {
     const user = await this.userModel.findOne({ email }).select('+password');
 
     if (!user) {
-      throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+      throw new BadRequestException('email', 'User not found');
     }
 
     const isPasswordCompared = await isCryptCompare(password, user.password);
 
     if (!isPasswordCompared) {
-      throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+      throw new BadRequestException('password', 'Invalid credentials');
     }
 
     return user.populate('user', '-password');

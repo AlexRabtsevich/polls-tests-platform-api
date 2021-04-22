@@ -12,5 +12,4 @@ export interface ICreateUser {
   lastName: string;
   email: string;
   password: string;
-  confirmPassword: string;
 }

@@ -3,7 +3,7 @@ import { Document } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 
 @Schema({ versionKey: false })
-export class User {
+export class User extends Document {
   @Prop({ type: String, required: true })
   firstName: string;
 
